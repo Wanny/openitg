@@ -314,6 +314,9 @@ public:
 	/* Game-specific prefs: */
 	Preference<CString>	m_sDefaultModifiers;
 
+	/* Name definition when playing in Event Mode (replaces EVNT) -Wanny */
+	Preference<CString> m_sEventModeName;
+
 #if defined(XBOX)
 	// Virtual memory preferences
 	Preference<bool>	m_bEnableVirtualMemory;

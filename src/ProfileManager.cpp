@@ -538,6 +538,9 @@ void ProfileManager::AddStepsScore( const Song* pSong, const Steps* pSteps, Play
 		if( pProfile && !pProfile->m_sLastUsedHighScoreName.empty() )
 			hs.sName = pProfile->m_sLastUsedHighScoreName;
 		else
+			if ( PREFSMAN->m_sEventModeName.Get() != "") //Event Mode custom name -Wanny
+				hs.sName = PREFSMAN->m_sEventModeName;
+		else
 			hs.sName = "EVNT";
 	}
 	else
@@ -606,6 +609,9 @@ void ProfileManager::AddCourseScore( const Course* pCourse, const Trail* pTrail,
 		Profile* pProfile = PROFILEMAN->GetProfile(pn);
 		if( pProfile && !pProfile->m_sLastUsedHighScoreName.empty() )
 			hs.sName = pProfile->m_sLastUsedHighScoreName;
+		else
+			if ( PREFSMAN->m_sEventModeName.Get() != "") //Event Mode custom name -Wanny
+				hs.sName = PREFSMAN->m_sEventModeName;
 		else
 			hs.sName = "EVNT";
 	}

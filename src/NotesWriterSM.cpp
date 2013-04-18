@@ -49,6 +49,8 @@ void NotesWriterSM::WriteGlobalTags( RageFile &f, const Song &out )
 	f.PutLine( ssprintf( "#SAMPLESTART:%.3f;", out.m_fMusicSampleStartSeconds ) );
 	f.PutLine( ssprintf( "#SAMPLELENGTH:%.3f;", out.m_fMusicSampleLengthSeconds ) );
 
+	f.PutLine( ssprintf( "#MENUCOLOR:%s;", out.m_sMenuColor.c_str() ) );  //For Song colors -Wanny
+
 	f.Write( "#SELECTABLE:" );
 	switch(out.m_SelectionDisplay) {
 	default: ASSERT(0);  /* fallthrough */

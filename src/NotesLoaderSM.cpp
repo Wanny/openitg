@@ -275,6 +275,10 @@ bool SMLoader::LoadFromSMFile( CString sPath, Song &out )
 		else if( sValueName=="CREDIT" )
 			out.m_sCredit = sParams[1];
 
+		/* Color definition for songs -Wanny*/
+		else if( sValueName=="MENUCOLOR")
+			out.m_sMenuColor = sParams[1];
+
 		else if( sValueName=="BANNER" )
 			out.m_sBannerFile = sParams[1];
 

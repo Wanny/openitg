@@ -524,6 +524,8 @@ bool DWILoader::LoadFromDWIFile( CString sPath, Song &out )
 				BlacklistedImages.insert( sub.c_str() );
 			}
 		}
+		else if( 0==stricmp(sValueName,"MENUCOLOR") ) // Song color definition tag -Wanny
+			out.m_sMenuColor = sParams[1];
 		else
 		{
 			// do nothing.  We don't care about this value name

@@ -138,6 +138,9 @@ public:
 	CString	m_sBackgroundFile;
 	CString	m_sCDTitleFile;
 
+	// For Song colors -Wanny
+	CString m_sMenuColor; 
+
 	CString GetMusicPath() const;
 	CString GetBannerPath() const;
 	CString	GetLyricsPath() const;

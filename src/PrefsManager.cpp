@@ -295,7 +295,10 @@ PrefsManager::PrefsManager() :
 	m_bLogCheckpoints				( "LogCheckpoints",				false ),
 
 	/* Game-specific prefs: */
-	m_sDefaultModifiers				( "DefaultModifiers",			"" )
+	m_sDefaultModifiers				( "DefaultModifiers",			"" ),
+
+	/* Name definition when playing in Event Mode (replaces EVNT) -Wanny */
+	m_sEventModeName				( "EventModeName",				"")
 
 #if defined(XBOX)
 	,

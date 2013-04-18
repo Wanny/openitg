@@ -583,6 +583,7 @@ RageColor SongManager::GetSongColor( const Song* pSong )
 	 */
 //	const StepsType st = GAMESTATE->GetCurrentStyle()->m_StepsType;
 	const vector<Steps*>& vpSteps = pSong->GetAllSteps();
+	RageColor SongColor = GetSongGroupColor( pSong->m_sGroupName ); //for Song colors -Wanny
 	for( unsigned i=0; i<vpSteps.size(); i++ )
 	{
 		const Steps* pSteps = vpSteps[i];
@@ -600,7 +601,80 @@ RageColor SongManager::GetSongColor( const Song* pSong )
 			return (RageColor)EXTRA_COLOR;
 	}
 
-	return GetSongGroupColor( pSong->m_sGroupName );
+	//Begin of section borrowed from 3.9+ -Wanny
+	CString sMenuColor = pSong->m_sMenuColor;
+
+	if( stricmp(sMenuColor,"") != 0 )
+	{
+		sMenuColor.MakeLower();
+		
+		// Stock colors
+		if( stricmp(sMenuColor,"white") == 0 )
+			SongColor.FromString( "1,1,1,1" );
+		else if( stricmp(sMenuColor,"black") == 0 )
+			SongColor.FromString( "0,0,0,0" );
+		else if( stricmp(sMenuColor,"brightred") == 0 )
+			SongColor.FromString( "1,0,0,1" );
+		else if( stricmp(sMenuColor,"brightgreen") == 0 )
+			SongColor.FromString( "0,1,0,1" );
+		else if( stricmp(sMenuColor,"brightblue") == 0 )
+			SongColor.FromString( "0,0,1,1" );
+
+		// Mixes of the color values
+		else if( stricmp(sMenuColor,"red") == 0 )
+			SongColor.FromString( "1,0.3,0.3,1" );
+		else if( stricmp(sMenuColor,"green") == 0 )
+			SongColor.FromString( "0.1,0.7,0.3,1" );
+		else if( stricmp(sMenuColor,"blue") == 0 )
+			SongColor.FromString( "0,0.4,0.8,1" );
+
+		else if( stricmp(sMenuColor,"yellow") == 0 )
+			SongColor.FromString( "0.9,0.9,0,1" );
+		else if( stricmp(sMenuColor,"pink") == 0 )
+			SongColor.FromString( "0.8,0.1,0.6,1" );
+		else if( stricmp(sMenuColor,"purple") == 0 )
+			SongColor.FromString( "0.6,0.4,0.8,1" );
+		else if( stricmp(sMenuColor,"seagreen") == 0 )
+			SongColor.FromString( "0,0.6,0.6,1" );
+		else if( stricmp(sMenuColor,"cyan") == 0 )
+			SongColor.FromString( "0,0.8,0.8,1" );
+		else if( stricmp(sMenuColor,"orange") == 0 )
+			SongColor.FromString( "0.8,0.6,0,1" );
+
+		// DDR Songwheel colors
+		else if( stricmp(sMenuColor,"ddrgreen") == 0 )
+			SongColor.FromString( "0.22,0.92,0.22,0.81" );
+		else if( stricmp(sMenuColor,"ddrblue") == 0 )
+			SongColor.FromString( "0.31,0.67,0.98,0.95" );
+		else if( stricmp(sMenuColor,"ddryellow") == 0 )
+		{
+			// SongColor.FromString( "0.92,0.92,0.09,0.84" ); // What the Extreme theme says
+			SongColor.FromString( "0.92,0.92,0.09,0.99" );
+		}
+		else if( stricmp(sMenuColor,"ddrpurple") == 0 )
+			SongColor.FromString( "0.67,0.22,0.91,0.8" );
+
+		// Theme specified colors
+		else if( stricmp(sMenuColor,"extra") == 0 || stricmp(sMenuColor,"boss") == 0 )
+			SongColor = EXTRA_COLOR;
+		else if( stricmp(sMenuColor,"group") == 0 )
+			SongColor = GetSongGroupColor( pSong->m_sGroupName );
+
+		// If they've manually specified or incorrectly specified
+		else
+		{
+			// Fallback to ensure that, should a improper value be entered, the colour will default back to the
+			// group color scheme
+			if( !SongColor.FromString(sMenuColor) ) // This line loads the RageColor string
+			{
+				LOG->Warn( "The color value '%s' for song '%s' is invalid, and will be ignored.", sMenuColor.c_str(), pSong->m_sSongFileName.c_str() );
+				SongColor = GetSongGroupColor( pSong->m_sGroupName );
+			}
+		}
+	}
+	//end of section borrowed from 3.9+ -Wanny
+	//return GetSongGroupColor( pSong->m_sGroupName ); // -Original
+	return SongColor;
 }
 
 RageColor SongManager::GetCourseGroupColor( const CString &sCourseGroupName )
