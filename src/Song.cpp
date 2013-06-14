@@ -810,6 +810,11 @@ void Song::TidyUpData()
 		GetDirListing( m_sSongDir + CString("*.avi"), arrayPossibleMovies );
 		GetDirListing( m_sSongDir + CString("*.mpg"), arrayPossibleMovies );
 		GetDirListing( m_sSongDir + CString("*.mpeg"), arrayPossibleMovies );
+		GetDirListing( m_sSongDir + CString("*.mp4"), arrayPossibleMovies );
+        GetDirListing( m_sSongDir + CString("*.mkv"), arrayPossibleMovies );
+        GetDirListing( m_sSongDir + CString("*.flv"), arrayPossibleMovies );
+        GetDirListing( m_sSongDir + CString("*.f4v"), arrayPossibleMovies );
+        GetDirListing( m_sSongDir + CString("*.mov"), arrayPossibleMovies );
 		/* Use this->GetBeatFromElapsedTime(0) instead of 0 to start when the
 		 * music starts. */
 		if( arrayPossibleMovies.size() == 1 )

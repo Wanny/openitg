@@ -445,6 +445,11 @@ FileType ActorUtil::GetFileType( const CString &sPath )
 	else if( 
 		sExt=="avi" || 
 		sExt=="mpeg" || 
+		sExt=="mp4"	||
+		sExt=="mkv"	||
+		sExt=="mov" ||
+		sExt=="flv" ||
+		sExt=="f4v" ||
 		sExt=="mpg" )		return FT_Movie;
 	else if( 
 		sExt=="sprite" )	return FT_Sprite;

@@ -123,7 +123,7 @@ RageTexture* RageTextureManager::LoadTextureInternal( RageTextureID ID )
 	sExt.MakeLower();
 
 	RageTexture* pTexture;
-	if( sExt == "avi" || sExt == "mpg" || sExt == "mpeg" )
+	if( sExt == "avi" || sExt == "mpg" || sExt == "mpeg" || sExt == "mp4" || sExt == "mkv" || sExt == "mov" || sExt == "flv" || sExt == "f4v" )
 		pTexture = RageMovieTexture::Create( ID );
 	else
 		pTexture = new RageBitmapTexture( ID );
