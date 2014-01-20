@@ -275,9 +275,9 @@ void ScreenGameplay::Init()
 	// Add score frame
 	//
 	m_sprScoreFrame.Load( THEME->GetPathG(m_sName,bBattery?"oni score frame":"score frame") );
-	m_sprScoreFrame.SetName( "ScoreFrame" );
+	m_sprScoreFrame->SetName( "ScoreFrame" );
 	SET_XY( m_sprScoreFrame );
-	this->AddChild( &m_sprScoreFrame );
+	this->AddChild( m_sprScoreFrame );
 
 
 	//

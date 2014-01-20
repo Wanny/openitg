@@ -115,7 +115,7 @@ protected:
 	BPMDisplay			m_BPMDisplay;
 	float				m_fLastBPS;
 
-	Sprite				m_sprScoreFrame;
+	AutoActor			m_sprScoreFrame;
 	ScoreDisplay*		m_pPrimaryScoreDisplay[NUM_PLAYERS];
 	ScoreDisplay*		m_pSecondaryScoreDisplay[NUM_PLAYERS];
 	ScoreKeeper*		m_pPrimaryScoreKeeper[NUM_PLAYERS];
