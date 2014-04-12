@@ -829,7 +829,8 @@ void ScreenSelectMusic::Input( const DeviceInput& DeviceI, InputEventType type, 
 			(type == IET_SLOW_REPEAT || type == IET_FAST_REPEAT ))
 			return; /* not allowed yet */
 
-		SCREENMAN->PlayStartSound();
+		//SCREENMAN->PlayStartSound();
+		SOUND->PlayOnce (THEME->GetPathS(m_sName, "enter options") );
 
 		m_bGoToOptions = true;
 		m_sprOptionsMessage.SetState( 1 );

@@ -671,7 +671,10 @@ float ScreenSelectMaster::DoMenuStart( PlayerNumber pn )
 		for( int i=0; i<NUM_CURSOR_PARTS; i++ )
 		{
 			COMMAND( m_sprCursor[i][pn], "Choose");
-			fSecs = max( fSecs, m_sprCursor[i][iIndex]->GetTweenTimeLeft() );
+			if(m_sprCursor[i][iIndex] != NULL)
+			{
+				fSecs = max( fSecs, m_sprCursor[i][iIndex]->GetTweenTimeLeft() );
+			}
 		}
 	}
 
