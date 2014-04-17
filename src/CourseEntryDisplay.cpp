@@ -41,7 +41,7 @@ void CourseEntryDisplay::Load()
 		this->AddChild( &m_textFoot[pn] );
 
 		m_textDifficultyNumber[pn].SetName( SEPARATE_COURSE_METERS? ssprintf("DifficultyP%i", pn+1):CString("Difficulty") );
-		m_textDifficultyNumber[pn].LoadFromFont( THEME->GetPathF("Common","normal") );
+		m_textDifficultyNumber[pn].LoadFromFont( THEME->GetPathF("CourseEntryDisplay","difficulty") );
 		SET_XY_AND_ON_COMMAND( &m_textDifficultyNumber[pn] );
 		this->AddChild( &m_textDifficultyNumber[pn] );
 	}

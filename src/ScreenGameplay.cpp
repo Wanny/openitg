@@ -248,7 +248,12 @@ void ScreenGameplay::Init()
 		this->AddChild( &m_Player[p] );
 	
 		m_sprOniGameOver[p].SetName( ssprintf("OniGameOverP%i",p+1) );
+
+		if(DoesFileExist (m_sName + ssprintf("OniGameOverP%i", p+1)))
+			m_sprOniGameOver[p].Load( THEME->GetPathG(m_sName,ssprintf("OniGameOverP%i", p+1)));
+		else
 		m_sprOniGameOver[p].Load( THEME->GetPathG(m_sName,"oni gameover") );
+
 		SET_XY_AND_ON_COMMAND( m_sprOniGameOver[p] );
 		this->AddChild( &m_sprOniGameOver[p] );
 	}

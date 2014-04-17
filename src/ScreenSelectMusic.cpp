@@ -374,6 +374,9 @@ void ScreenSelectMusic::Init()
 	m_soundLocked.Load( THEME->GetPathS(m_sName,"locked") );
 	m_soundSelectPressed.Load( THEME->GetPathS(m_sName,"select down"), true );
 
+	if (GAMESTATE->IsCourseMode() )
+		SOUND->PlayOnceFromDir( ANNOUNCER->GetPathTo( "select course intro" ));
+	else
 	SOUND->PlayOnceFromDir( ANNOUNCER->GetPathTo( "select music intro" ));
 
 	m_bMadeChoice = false;
@@ -829,7 +832,8 @@ void ScreenSelectMusic::Input( const DeviceInput& DeviceI, InputEventType type, 
 			(type == IET_SLOW_REPEAT || type == IET_FAST_REPEAT ))
 			return; /* not allowed yet */
 
-		SCREENMAN->PlayStartSound();
+		//SCREENMAN->PlayStartSound();
+		SOUND->PlayOnce (THEME->GetPathS(m_sName, "enter options") );
 
 		m_bGoToOptions = true;
 		m_sprOptionsMessage.SetState( 1 );
