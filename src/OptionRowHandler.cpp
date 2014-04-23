@@ -368,7 +368,10 @@ public:
 				Trail* pTrail = vTrails[i];
 
 				CString s = CourseDifficultyToThemedString( pTrail->m_CourseDifficulty );
-				s += ssprintf( " %d", pTrail->GetMeter() );
+				if (!HIDE_METER) // Condition to display the meter or not -Wanny
+				{
+					s += ssprintf( " %d", pTrail->GetMeter() );
+				}
 				defOut.choices.push_back( s );
 				GameCommand mc;
 				mc.m_pTrail = pTrail;
