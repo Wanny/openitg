@@ -6,6 +6,8 @@
 #include "InputMapper.h"
 #include "ScreenDimensions.h"
 
+//New, needed to broadcast messages -Kriz
+#include "MessageManager.h"
 
 /*
  * These navigation types are provided:
@@ -889,6 +891,10 @@ void ScreenOptions::StoreFocus( PlayerNumber pn )
 	GetWidthXY( pn, m_iCurrentRow[pn], row.GetChoiceInRowWithFocus(pn), iWidth, m_iFocusX[pn], iY );
 	LOG->Trace("cur selection %ix%i @ %i", 
 		m_iCurrentRow[pn], row.GetChoiceInRowWithFocus(pn), m_iFocusX[pn]);
+
+	//The following sends a broadcast message with the actual position in a specific option row. Numbers start at 0. -kriz
+	CString playeroption = ssprintf("FocusedOpt_p%ir%ic%i",pn, m_iCurrentRow[pn], row.GetChoiceInRowWithFocus(pn));
+	MESSAGEMAN->Broadcast(playeroption);
 }
 
 /* Left/right */
