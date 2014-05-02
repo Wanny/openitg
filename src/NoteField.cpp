@@ -97,7 +97,9 @@ void NoteField::Load(
 	m_fPercentFadeToFail = -1;
 	m_LastSeenBeatToNoteSkinRev = -1;
 
-	//ASSERT( m_pNoteData->GetNumTracks() == GAMESTATE->GetCurrentStyle()->m_iColsPerPlayer );  -- It makes the game crash if the first song in Oni is failed. Nothing is lost with this disabled... for now -Wan
+	
+	if (GAMESTATE->m_PlayMode != PLAY_MODE_ONI)
+	ASSERT( m_pNoteData->GetNumTracks() == GAMESTATE->GetCurrentStyle()->m_iColsPerPlayer );  //It makes the game crash if the first song in Oni is failed. Let's avoid this assert in that mode...
 
 	RefreshBeatToNoteSkin();
 }

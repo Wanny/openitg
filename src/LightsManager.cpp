@@ -16,6 +16,8 @@ static Preference<CString> g_sLightsDrivers( "LightsDriver", "" ); // "" = DEFAU
 Preference<float>	g_fLightsFalloffSeconds( "LightsFalloffSeconds", 0.1f );
 Preference<float>	g_fLightsAheadSeconds( "LightsAheadSeconds", 0.05f );
 Preference<bool>	g_bBlinkGameplayButtonLightsOnNote( "BlinkGameplayButtonLightsOnNote", false );
+//New preference for lights in attract mode -kriz
+Preference<bool>	g_bBlinkGameButtonLightsOnPressInAttract( "BlinkGameButtonLightsOnPressInAttract", false );
 
 
 static const CString CabinetLightNames[] = {
@@ -214,6 +216,23 @@ void LightsManager::Update( float fDeltaTime )
 		}
 		break;
 	case LIGHTSMODE_ATTRACT:
+		//{  ORIGINAL VERSION, WILL DELETE LATER -Wanny
+		//	int iSec = (int)RageTimer::GetTimeSinceStartFast();
+		//	int iTopIndex = iSec % 4;
+		//	switch( iTopIndex )
+		//	{
+		//	case 0:	m_LightsState.m_bCabinetLights[LIGHT_MARQUEE_UP_LEFT]  = true;	break;
+		//	case 1:	m_LightsState.m_bCabinetLights[LIGHT_MARQUEE_LR_RIGHT] = true;	break;
+		//	case 2:	m_LightsState.m_bCabinetLights[LIGHT_MARQUEE_UP_RIGHT] = true;	break;
+		//	case 3:	m_LightsState.m_bCabinetLights[LIGHT_MARQUEE_LR_LEFT]  = true;	break;
+		//	default:	ASSERT(0);
+		//	}
+
+		//	bool bOn = (iSec%4)==0;
+		//	m_LightsState.m_bCabinetLights[LIGHT_BASS_LEFT]			= bOn;
+		//	m_LightsState.m_bCabinetLights[LIGHT_BASS_RIGHT]		= bOn;
+		//}
+
 		{
 			int iSec = (int)RageTimer::GetTimeSinceStartFast();
 			int iTopIndex = iSec % 4;
@@ -226,9 +245,39 @@ void LightsManager::Update( float fDeltaTime )
 			default:	ASSERT(0);
 			}
 
-			bool bOn = (iSec%4)==0;
+			//bool bOn = (iSec%4)==0; -- We want bass lights to blink each second, not each two. -kriz
+			bool bOn = (iSec%2)==0;
 			m_LightsState.m_bCabinetLights[LIGHT_BASS_LEFT]			= bOn;
 			m_LightsState.m_bCabinetLights[LIGHT_BASS_RIGHT]		= bOn;
+
+			//Also blink the gamepads -kriz
+			if( !g_bBlinkGameButtonLightsOnPressInAttract )
+			{
+				//
+				// Blink NOT on bass lights timing.
+				//
+				FOREACH_GameController( gc )
+				{
+					FOREACH_GameButton( gb )
+					{
+						m_LightsState.m_bGameButtonLights[gc][gb] = bOn ;
+					}
+				}
+			}
+			else
+			{
+				//
+				// Blink on button pressess.
+				//
+				FOREACH_GameController( gc )
+				{
+					FOREACH_GameButton_Custom( gb ) 
+					//FOREACH_GameButton( gb )
+					{
+						m_LightsState.m_bGameButtonLights[gc][gb] = INPUTMAPPER->IsButtonDown( GameInput(gc,gb) );
+					}
+				}
+			}
 		}
 		break;
 	case LIGHTSMODE_MENU:
@@ -351,7 +400,8 @@ void LightsManager::Update( float fDeltaTime )
 	{
 	case LIGHTSMODE_ATTRACT:
 		{
-			ZERO( m_LightsState.m_bGameButtonLights );
+			//ZERO( m_LightsState.m_bGameButtonLights );
+			//Disabled. Now we use the gamepad lights -kriz
 		}
 		break;
 	case LIGHTSMODE_ALL_CLEARED:

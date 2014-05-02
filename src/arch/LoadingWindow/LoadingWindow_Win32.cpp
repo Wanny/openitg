@@ -14,6 +14,12 @@ REGISTER_LOADING_WINDOW( Win32 );
 
 static HBITMAP g_hBitmap = NULL;
 
+//This value will tell if we must load a big image (not displaying text) or normal load -kriz
+bool normal_load = true;
+//To hand out the image size
+int Xsize = 320;
+int Ysize = 240;
+
 /* Load a file into a GDI surface. */
 HBITMAP LoadWin32Surface( CString fn )
 {
@@ -39,7 +45,13 @@ HBITMAP LoadWin32Surface( CString fn )
 			unsigned const char *data = line + (x*s->format->BytesPerPixel);
 			
 			SetPixelV( BitmapDC, x, y, RGB( data[3], data[2], data[1] ) );
+
+			//Image size
+			Xsize = x;
 		}
+
+		//Image size
+		Ysize = y;
 	}
 
 	SelectObject( BitmapDC, NULL );
@@ -49,19 +61,82 @@ HBITMAP LoadWin32Surface( CString fn )
 	return bitmap;
 }
 
+//BOOL CALLBACK LoadingWindow_Win32::WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
+//{
+//	switch( msg )
+//	{
+//	case WM_INITDIALOG:
+//		g_hBitmap = LoadWin32Surface( "Data/splash.png" );
+//		if( g_hBitmap == NULL )
+//			g_hBitmap = LoadWin32Surface( "Data/splash.bmp" );
+//		SendMessage( 
+//			GetDlgItem(hWnd,IDC_SPLASH), 
+//			STM_SETIMAGE, 
+//			(WPARAM) IMAGE_BITMAP, 
+//			(LPARAM) (HANDLE) g_hBitmap );
+//		break;
+//
+//	case WM_DESTROY:
+//		DeleteObject( g_hBitmap );
+//		g_hBitmap = NULL;
+//		break;
+//	}
+//
+//	return FALSE;
+//}
+
+
+//completely redone function -Kriz
 BOOL CALLBACK LoadingWindow_Win32::WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	switch( msg )
 	{
 	case WM_INITDIALOG:
-		g_hBitmap = LoadWin32Surface( "Data/splash.png" );
+		//Let's try this first 
+		g_hBitmap = LoadWin32Surface( "Data/splashnotext.png" ); //If this exists, the question below WON'T return null.
 		if( g_hBitmap == NULL )
-			g_hBitmap = LoadWin32Surface( "Data/splash.bmp" );
-		SendMessage( 
-			GetDlgItem(hWnd,IDC_SPLASH), 
-			STM_SETIMAGE, 
-			(WPARAM) IMAGE_BITMAP, 
-			(LPARAM) (HANDLE) g_hBitmap );
+		{
+			g_hBitmap = LoadWin32Surface( "Data/splash.png" );
+
+			if( g_hBitmap == NULL )
+				g_hBitmap = LoadWin32Surface( "Data/splash.bmp" );
+			SendMessage( 
+				GetDlgItem(hWnd,IDC_SPLASH), 
+				STM_SETIMAGE, 
+				(WPARAM) IMAGE_BITMAP, 
+				(LPARAM) (HANDLE) g_hBitmap );
+		}
+		else
+		{
+			normal_load=false;  //then it isn't a normal load, loading a bit image instead.
+			SendMessage(GetDlgItem(hWnd,IDC_SPLASH),STM_SETIMAGE,(WPARAM) IMAGE_BITMAP,(LPARAM) (HANDLE) g_hBitmap ); //We sent the message anyways
+
+			//detecting the desktop size...
+			int horizontal = 0;
+			int vertical = 0;
+			RECT desktop;
+			// Get a handle to the desktop window
+			const HWND hDesktop = GetDesktopWindow();
+			// Get the size of screen to the desktop variable
+			GetWindowRect(hDesktop, &desktop);
+			// The top left corner will have coordinates (0,0)
+			// and the bottom right corner will have coordinates
+			// (horizontal, vertical)
+			horizontal = desktop.right;
+			vertical = desktop.bottom;
+
+			//We have the desktop resolution values, now let's do some math to get the exact desktop center...
+			horizontal= (horizontal/2)-(Xsize/2);
+			vertical = (vertical/2)-(Ysize/2);
+
+			/*With this we set the place AND size of the window.
+			The first value is the name of the window, the 2nd and 3rd are the place where it will appear (relative to the upper left corner)
+			Note: this value is in the CENTER of the window, so we make it to be at the center of the desktop
+			The other two values are the actual window size, and the last one must not be changed or it won't appear where it should. */
+
+			MoveWindow(hWnd, horizontal, vertical, Xsize, Ysize, TRUE);
+		}
+
 		break;
 
 	case WM_DESTROY:
@@ -70,8 +145,10 @@ BOOL CALLBACK LoadingWindow_Win32::WndProc( HWND hWnd, UINT msg, WPARAM wParam, 
 		break;
 	}
 
+
 	return FALSE;
 }
+
 
 void LoadingWindow_Win32::SetIcon( const RageSurface *pIcon )
 {
@@ -128,14 +205,17 @@ void LoadingWindow_Win32::SetText(CString str)
 		if( text[i] == asMessageLines[i] )
 			continue;
 		text[i] = asMessageLines[i];
-
-		SendDlgItemMessage( hwnd, msgs[i], WM_SETTEXT, 0, 
-			(LPARAM)asMessageLines[i].c_str());
+		
+		if (normal_load) //if there's no normal load, simply don't set this message. Texts won't appear.
+		{
+		SendDlgItemMessage( hwnd, msgs[i], WM_SETTEXT, 0, (LPARAM)asMessageLines[i].c_str());
+		}
 	}
 }
 
 /*
  * (c) 2001-2004 Chris Danford, Glenn Maynard
+ * (c) 2014 Cristian "kriz valentine" Larco
  * All rights reserved.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a

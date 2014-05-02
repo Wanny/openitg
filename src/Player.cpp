@@ -1578,10 +1578,12 @@ void Player::HandleTapRowScore( unsigned row, float fStepsSeconds )
 		m_Combo.SetCombo( m_pPlayerStageStats->iCurCombo, m_pPlayerStageStats->iCurMissCombo, fStepsSeconds );
 
 //Taken from Beware Extreme. We don't want the announcer repeating the same combo phrase each time. -Wanny
-	int oldMaxCombo = m_pPlayerStageStats->iMaxCombo;
-	int newMaxCombo = max(m_pPlayerStageStats->iMaxCombo, iCurCombo);
+//DOESN'T WORK WELL (SCREENHOWTOPLAY CRASHES), USING THE ORIGINAL FUNCTION FOR NOW
+//int oldMaxCombo = m_pPlayerStageStats->iMaxCombo;
+//int newMaxCombo = max(m_pPlayerStageStats->iMaxCombo, iCurCombo);
+//#define CROSSED( x ) (oldMaxCombo<x && newMaxCombo>=x)
 
-#define CROSSED( x ) (oldMaxCombo<x && newMaxCombo>=x)
+#define CROSSED( x ) (iOldCombo<x && iCurCombo>=x)
 	if ( CROSSED(100) )	
 		SCREENMAN->PostMessageToTopScreen( SM_100Combo, 0 );
 	else if( CROSSED(200) )	
