@@ -260,7 +260,7 @@ void LightsManager::Update( float fDeltaTime )
 				{
 					FOREACH_GameButton( gb )
 					{
-						m_LightsState.m_bGameButtonLights[gc][gb] = bOn ;
+						m_LightsState.m_bGameButtonLights[gc][gb] = !bOn ;
 					}
 				}
 			}

@@ -133,8 +133,12 @@ BOOL CALLBACK LoadingWindow_Win32::WndProc( HWND hWnd, UINT msg, WPARAM wParam, 
 			The first value is the name of the window, the 2nd and 3rd are the place where it will appear (relative to the upper left corner)
 			Note: this value is in the CENTER of the window, so we make it to be at the center of the desktop
 			The other two values are the actual window size, and the last one must not be changed or it won't appear where it should. */
+			//MoveWindow(hWnd, horizontal, vertical, Xsize, Ysize, TRUE); //deprecated!. new function below
 
-			MoveWindow(hWnd, horizontal, vertical, Xsize, Ysize, TRUE);
+			/*new idea, this function also set the loading window as the TOPMOST window.
+			all the numeric values do the same function as in "movewindow" function
+			don´t change the second and last values!!*/
+			SetWindowPos(hWnd,HWND_TOP, horizontal, vertical, Xsize, Ysize, SWP_SHOWWINDOW);
 		}
 
 		break;

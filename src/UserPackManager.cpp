@@ -155,7 +155,7 @@ bool UserPackManager::TransferPack( const CString &sPack, const CString &sDestPa
 
 /* use "" as a sentinel for the end of the list */
 const CString asRootDirs[] = { "Themes", "Songs", "BackgroundEffects", "BGAnimations", "BackgroundTransitions", 
-				"Courses", "NoteSkins", "RandomMovies", "" };
+				"Courses", "NoteSkins", "RandomMovies", "Announcers", "" };
 
 /* seemingly good start of an automagical way to mount a user pack based on the folder structure */
 CString UserPackManager::GetPackMountPoint( const CString &sPack )
