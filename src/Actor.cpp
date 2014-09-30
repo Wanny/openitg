@@ -540,7 +540,13 @@ bool Actor::IsFirstUpdate() const
 void Actor::Update( float fDeltaTime )
 {
 //	LOG->Trace( "Actor::Update( %f )", fDeltaTime );
-	ASSERT_M( fDeltaTime >= 0, ssprintf("%f",fDeltaTime) );
+//	ASSERT_M( fDeltaTime >= 0, ssprintf("%f",fDeltaTime) );
+
+// Replaced the Assert with just a Warn. Some simfiles with visual gimmicks crash more than often -Kriz
+	if (fDeltaTime <= 0)
+	 {
+	  LOG->Warn("actor.cpp: some actor has a negative fDeltaTime!! this shouldn´t happen!!! -> %f",fDeltaTime  );
+	 }
 
 	if( m_fHibernateSecondsLeft > 0 )
 	{

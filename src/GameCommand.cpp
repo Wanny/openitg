@@ -20,6 +20,11 @@
 #include "PlayerState.h"
 #include "RageFileManager.h"
 
+//new, to "reloadthemeandtectures" and "reloadtextures" -kriz
+#include "CodeDetector.h"
+#include "RageTextureManager.h"
+#include "NoteSkinManager.h"
+
 void GameCommand::Init()
 {
 	m_sName = "";
@@ -64,6 +69,8 @@ void GameCommand::Init()
 	m_bResetToFactoryDefaults = false;
 	m_bStopMusic = false;
 	m_bReloadTheme = false;
+	m_bReloadThemeAndTextures = false; //new -kriz
+	m_bReloadTextures = false; //new -kriz
 	m_bApplyDefaultOptions = false;
 }
 
@@ -362,6 +369,14 @@ void GameCommand::LoadOne( const Command& cmd )
 	else if( sName == "reloadtheme" )
 	{
 		m_bReloadTheme = true;
+	}
+	else if( sName == "reloadthemeandtextures" ) //new -kriz
+	{
+		m_bReloadThemeAndTextures = true;
+	}
+	else if( sName == "reloadtextures" )//new -kriz
+	{
+		m_bReloadTextures = true;
 	}
 	else if( sName == "clearbookkeepingdata" )
 	{
@@ -775,6 +790,38 @@ void GameCommand::ApplySelf( const vector<PlayerNumber> &vpns ) const
 		ApplyGraphicOptions();
 	}
 
+	/*
+	These 2 functions where made to solve some nasty problems that happen in OpenITG 
+	(so far tested only in the windows build, they also affect Stepmania "3.95"):
+
+	Appearently the garbage collector doesn't work like it should, so after several hours 
+	of continous play you may get an "access violation" crash. These functions help to minimize those errors
+	
+	Read the changelog for more details.
+
+	--KrizValentine
+	*/
+
+	if( m_bReloadThemeAndTextures ) //new -kriz
+	{
+		THEME->ReloadMetrics();
+		TEXTUREMAN->ReloadAll();
+		NOTESKIN->RefreshNoteSkinData( GAMESTATE->m_pCurGame );
+		CodeDetector::RefreshCacheItems();
+		SCREENMAN->ThemeChanged();
+		//SCREENMAN->SystemMessage( "Theme & Textures manually reloaded" ); -- The player doesn't have to see this.
+		LOG->Trace( "GAMECOMMAND -> Theme & Textures manually reloaded" );
+	}
+
+	if( m_bReloadTextures ) //new -kriz
+	{
+		TEXTUREMAN->ReloadAll();
+		NOTESKIN->RefreshNoteSkinData( GAMESTATE->m_pCurGame );
+		CodeDetector::RefreshCacheItems();
+		//SCREENMAN->SystemMessage( "Textures manually reloaded" );  --  The player doesn't have to see this either.
+		LOG->Trace( "GAMECOMMAND ->ReloadThemeAndTextures. ReloadTextures. Textures manually reloaded" );
+	}
+
 	/* This demonstrates a non-trivial error in the LUA subsystem,
 	 * or a grave misunderstanding on my part. Why can the LUA
 	 * function be set with no actual data?
@@ -1173,6 +1220,7 @@ bool GameCommand::IsZero() const
 
 /*
  * (c) 2001-2004 Chris Danford, Glenn Maynard
+ * (c) 2014 Cristian Larco Lizama (KrizValentine)
  * All rights reserved.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a

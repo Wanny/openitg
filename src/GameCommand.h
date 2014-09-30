@@ -88,6 +88,8 @@ public:
 	bool m_bResetToFactoryDefaults;
 	bool m_bStopMusic;
 	bool m_bReloadTheme;
+	bool m_bReloadThemeAndTextures; //new- kriz
+	bool m_bReloadTextures;//new- kriz
 	bool m_bApplyDefaultOptions;
 };
 
@@ -95,6 +97,7 @@ public:
 
 /*
  * (c) 2001-2004 Chris Danford, Glenn Maynard
+ * (c) 2014 Cristian Larco Lizama (KrizValentine)
  * All rights reserved.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a
