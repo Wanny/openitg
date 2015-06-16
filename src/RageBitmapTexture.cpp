@@ -251,14 +251,23 @@ void RageBitmapTexture::Create()
 
 
 	//
-	// Enforce frames in the image have even dimensions.  Otherwise, 
-	// pixel/texel alignment will be off.
+	// Enforce frames in the image have even dimensions. 
+	// Otherwise, pixel/texel alignment will be off.
 	//
+
+	int iDimensionMultiple = 2;
+
+	if( HintString.find("doubleres") != string::npos )
+	{
+		iDimensionMultiple = 4;
+	}
+	
+
 	bool bRunCheck = true;
 	
-	 // Don't check if the artist intentionally blanked the image by making it very tiny.
-	if( this->GetSourceWidth()<=2 || this->GetSourceHeight()<=2 )
-		 bRunCheck = false;
+	// Don't check if the artist intentionally blanked the image by making it very tiny.
+	if( this->GetSourceWidth()<=iDimensionMultiple || this->GetSourceHeight()<=iDimensionMultiple )
+		bRunCheck = false;
 	
 	// HACK: Don't check song graphics.  Many of them are weird dimensions.
 	if( !TEXTUREMAN->GetOddDimensionWarning() )
@@ -268,8 +277,8 @@ void RageBitmapTexture::Create()
 	{
 		float fFrameWidth = this->GetSourceWidth() / (float)this->GetFramesWide();
 		float fFrameHeight = this->GetSourceHeight() / (float)this->GetFramesHigh();
-		float fBetterFrameWidth = roundf((fFrameWidth+0.99f)/2)*2;
-		float fBetterFrameHeight = roundf((fFrameHeight+0.99f)/2)*2;
+		float fBetterFrameWidth = roundf((fFrameWidth+0.99f)/iDimensionMultiple)*iDimensionMultiple;
+		float fBetterFrameHeight = roundf((fFrameHeight+0.99f)/iDimensionMultiple)*iDimensionMultiple;
 		float fBetterSourceWidth = this->GetFramesWide() * fBetterFrameWidth;
 		float fBetterSourceHeight = this->GetFramesHigh() * fBetterFrameHeight;
 		if( fFrameWidth!=fBetterFrameWidth || fFrameHeight!=fBetterFrameHeight )
@@ -295,6 +304,16 @@ void RageBitmapTexture::Create()
 	/* See if the apparent "size" is being overridden. */
 	GetResolutionFromFileName(actualID.filename, m_iSourceWidth, m_iSourceHeight);
 
+	// "doubleres" implementation borrowed from SM5. It works! -Wanny
+	/* if "doubleres" (high resolution) then we want the image to appear in-game
+	 * with dimensions 1/2 of the source. So, cut down the source dimension here
+	 * after everything above is finished operating with the real image
+	 * source dimensions. */
+	if( HintString.find("doubleres") != string::npos )
+	{
+		m_iSourceWidth = m_iSourceWidth / 2;
+		m_iSourceHeight = m_iSourceHeight / 2;
+	}
 
 	CString props;
 	props += RageDisplay::PixelFormatToString( pixfmt ) + " ";

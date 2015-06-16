@@ -819,7 +819,7 @@ void GameCommand::ApplySelf( const vector<PlayerNumber> &vpns ) const
 		NOTESKIN->RefreshNoteSkinData( GAMESTATE->m_pCurGame );
 		CodeDetector::RefreshCacheItems();
 		//SCREENMAN->SystemMessage( "Textures manually reloaded" );  --  The player doesn't have to see this either.
-		LOG->Trace( "GAMECOMMAND ->ReloadThemeAndTextures. ReloadTextures. Textures manually reloaded" );
+		LOG->Trace( "GAMECOMMAND -> ReloadTextures. Textures manually reloaded" );
 	}
 
 	/* This demonstrates a non-trivial error in the LUA subsystem,
